@@ -213,9 +213,12 @@ function startText(textObj) {
 
   $("typing-title").textContent = textObj.title;
   $("typing-topic").textContent = textObj.topic;
+  // Show the typing screen FIRST, then put the text in. A hidden screen cannot be
+  // scrolled: browsers ignore the "back to the top" and later bring back the scroll
+  // position of the previous text.
+  showView("typing");
   buildTextDisplay();
   updateLiveStats();
-  showView("typing");
 
   // Focus the hidden input so you can type straight away. This is called from a
   // tap/click handler, which is what lets the iPad show its on-screen keyboard.
@@ -228,7 +231,7 @@ function startText(textObj) {
 function buildTextDisplay() {
   const box = $("text-box");
   box.innerHTML = "";
-  box.scrollTop = 0;
+  box.scrollTop = 0; // start at the first line (this only works while the screen is visible)
   charEls = [];
   charWords = [];
 
