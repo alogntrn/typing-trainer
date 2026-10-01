@@ -17,6 +17,11 @@
   --correct: #19813a;
   --wrong: #cc2431;
   --wrong-bg: #fde2e4;
+  /* chart colours: blue and orange, chosen so they stay apart for colour-blind readers */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --gridline: #e1e0d9;
+  --axis: #c3c2b7;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,6 +37,10 @@
     --correct: #4ac26b;
     --wrong: #ff8080;
     --wrong-bg: #4a2227;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --gridline: #2c2c2a;
+    --axis: #383835;
   }
 }
 
@@ -277,10 +286,176 @@ main { padding-bottom: 48px; }
   text-align: center;
 }
 
-/* ---------- 7. Small screens ---------- */
+/* ---------- 7. Tabs, switches, tables ---------- */
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tabs { display: flex; gap: 6px; }
+.tab {
+  font: inherit;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  min-height: 44px;
+  padding: 0 18px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.tab.active { color: var(--accent-text); background: var(--accent); }
+.tab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (hover: hover) {
+  .tab:not(.active):hover { color: var(--text); border-color: var(--border); }
+}
+
+/* a row of buttons where exactly one is selected */
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.segmented button {
+  font: inherit;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  min-height: 40px;
+  padding: 0 14px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.segmented button.selected { color: var(--text); background: var(--accent-soft); }
+.segmented button:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+.note { font-size: 0.95rem; margin-top: 8px; }
+h4 { margin: 0; font-size: 1rem; }
+
+.button-row.tight { margin-top: 12px; }
+
+.badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0 8px;
+  vertical-align: middle;
+}
+.badge.good { color: var(--correct); border-color: var(--correct); }
+
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+th { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+caption { text-align: left; padding: 8px 0; }
+
+/* ---------- 8. Stats chart ---------- */
+.chart-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px 20px;
+}
+.chart-title { color: var(--muted); font-weight: 600; margin-bottom: 12px; }
+.chart-wrap { position: relative; height: 320px; }
+.table-view { margin-top: 12px; }
+.table-view summary { cursor: pointer; color: var(--muted); padding: 6px 0; }
+
+/* ---------- 9. Dictation ---------- */
+.dict-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px 20px;
+  align-items: end;
+  margin-bottom: 8px;
+}
+.field { display: flex; flex-direction: column; gap: 6px; font-weight: 600; }
+.field select, .field input[type="range"] { width: 100%; }
+.field select {
+  font: inherit;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-height: 44px;
+  padding: 0 10px;
+}
+.field input[type="range"] { accent-color: var(--accent); min-height: 44px; }
+.check { display: flex; align-items: center; gap: 10px; font-weight: 600; min-height: 44px; }
+.check input { width: 22px; height: 22px; accent-color: var(--accent); }
+
+.dict-input {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  font: inherit;
+  font-size: 1.3rem;      /* 16px or more stops iPad Safari from zooming in */
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  resize: vertical;
+}
+.dict-input:focus { outline: 3px solid var(--accent); outline-offset: 1px; }
+.dict-input:disabled { opacity: 0.6; }
+
+.dict-result {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px 22px;
+  margin-top: 14px;
+}
+.result-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 10px;
+}
+.word-line { font-size: 1.3rem; line-height: 1.7; margin-bottom: 6px; }
+.dict-result .btn { margin-top: 12px; }
+
+/* marks for each word (not only colour: also strike-through, underline, dashes) */
+.word-ok { color: var(--correct); }
+.word-wrong { color: var(--wrong); background: var(--wrong-bg); text-decoration: line-through; border-radius: 4px; padding: 0 3px; }
+.word-extra { color: var(--wrong); text-decoration: line-through; opacity: 0.85; }
+.word-missing { color: var(--wrong); border: 1px dashed var(--wrong); border-radius: 4px; padding: 0 6px; }
+.word-fix { color: var(--text); font-weight: 700; text-decoration: underline; text-decoration-color: var(--wrong); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+
+.sentence-results { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.sentence-result {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 16px;
+}
+.sentence-typed { display: block; font-size: 0.95rem; margin-top: 4px; }
+
+/* ---------- 10. Small screens ---------- */
 @media (max-width: 560px) {
   .text-card { padding: 16px 18px; }
   .typing-head { grid-template-columns: 1fr 1fr; }
   .typing-title { grid-column: 1 / -1; grid-row: 1; }
   .section-head { flex-direction: column; align-items: flex-start; }
+  .tab { padding: 0 12px; }
+  .chart-card { padding: 14px; }
+  .chart-wrap { height: 260px; }
+  .word-line, .dict-input { font-size: 1.15rem; }
 }

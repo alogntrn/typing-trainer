@@ -21,12 +21,19 @@
 
   <header class="top-bar">
     <h1>Type &amp; Dictate</h1>
+    <nav class="tabs" aria-label="Main">
+      <button id="tab-typing" class="tab" data-tab="typing">Typing</button>
+      <button id="tab-dictation" class="tab" data-tab="dictation">Dictation</button>
+      <button id="tab-stats" class="tab" data-tab="stats">Stats</button>
+    </nav>
   </header>
 
   <main>
 
-    <!-- SCREEN 1: today's texts -->
-    <section id="view-home" class="view">
+    <!-- ================= TYPING ================= -->
+
+    <!-- Today's texts -->
+    <section id="view-home" class="view" data-tab="typing">
       <div class="section-head">
         <div>
           <h2>Today's texts</h2>
@@ -40,8 +47,8 @@
       <button id="random-btn" class="btn">Random text</button>
     </section>
 
-    <!-- SCREEN 2: typing -->
-    <section id="view-typing" class="view" hidden>
+    <!-- Typing -->
+    <section id="view-typing" class="view" data-tab="typing" hidden>
       <div class="typing-head">
         <button id="back-btn" class="btn btn-quiet">&larr; Back</button>
         <div class="typing-title">
@@ -71,8 +78,8 @@
       <p id="typing-hint" class="muted hint"></p>
     </section>
 
-    <!-- SCREEN 3: summary after a run -->
-    <section id="view-summary" class="view" hidden>
+    <!-- Summary after a run -->
+    <section id="view-summary" class="view" data-tab="typing" hidden>
       <div class="section-head">
         <div>
           <h2>Well done!</h2>
@@ -93,16 +100,186 @@
       <div class="button-row">
         <button id="again-btn" class="btn btn-primary">Try again</button>
         <button id="next-btn" class="btn">Next text</button>
-        <button id="practise-btn" class="btn" disabled title="Coming in step 4">Practise my mistakes</button>
+        <button id="practise-btn" class="btn">Practise my mistakes</button>
       </div>
+      <p id="practise-note" class="muted"></p>
       <p><button id="home-btn" class="btn btn-quiet">&larr; Back to today's texts</button></p>
+    </section>
+
+    <!-- ================= DICTATION ================= -->
+
+    <!-- Choose a level and a text -->
+    <section id="view-dictation-home" class="view" data-tab="dictation" hidden>
+      <div class="section-head">
+        <div>
+          <h2>Dictation</h2>
+          <p class="muted">Listen to each sentence, type what you hear, and press Enter.</p>
+        </div>
+      </div>
+
+      <div id="level-switch" class="segmented" role="group" aria-label="Level">
+        <button data-value="easy">Easy</button>
+        <button data-value="medium">Medium</button>
+        <button data-value="hard">Hard</button>
+      </div>
+
+      <div id="dictation-list" class="text-list"></div>
+    </section>
+
+    <!-- Doing a dictation -->
+    <section id="view-dictation" class="view" data-tab="dictation" hidden>
+      <div class="typing-head">
+        <button id="dict-back-btn" class="btn btn-quiet">&larr; Back</button>
+        <div class="typing-title">
+          <h2 id="dict-title"></h2>
+          <p id="dict-level" class="muted"></p>
+        </div>
+        <p id="dict-progress" class="pill"></p>
+      </div>
+
+      <div class="dict-controls">
+        <label class="field">
+          <span>Voice</span>
+          <select id="voice-select" aria-label="Voice"></select>
+        </label>
+        <label class="field">
+          <span>Speed <strong id="speed-label"></strong></span>
+          <input id="speed-range" type="range" min="0.5" max="1.5" step="0.1">
+        </label>
+        <label class="check">
+          <input id="ignore-check" type="checkbox">
+          <span>Ignore capitalisation and punctuation</span>
+        </label>
+      </div>
+      <p id="voice-note" class="muted" hidden></p>
+
+      <div class="button-row tight">
+        <button id="play-btn" class="btn btn-primary">Play</button>
+        <button id="replay-btn" class="btn">Replay sentence</button>
+      </div>
+
+      <textarea id="dict-input" class="dict-input" rows="3"
+                autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+                aria-label="Type the sentence you hear"
+                placeholder="Press Play, then type what you hear and press Enter" disabled></textarea>
+      <p id="dict-hint" class="muted hint"></p>
+
+      <div id="dict-result" class="dict-result" hidden>
+        <p class="result-label">You typed</p>
+        <p id="dict-typed" class="word-line"></p>
+        <p class="result-label">Correct sentence</p>
+        <p id="dict-correct" class="word-line"></p>
+        <p id="dict-score" class="muted"></p>
+        <button id="dict-next" class="btn btn-primary">Next sentence</button>
+      </div>
+    </section>
+
+    <!-- Dictation summary -->
+    <section id="view-dictation-summary" class="view" data-tab="dictation" hidden>
+      <div class="section-head">
+        <div>
+          <h2>Dictation finished</h2>
+          <p id="dsum-title" class="muted"></p>
+        </div>
+      </div>
+
+      <div class="stats-bar big">
+        <div class="stat"><span id="dsum-accuracy" class="stat-value"></span><span class="stat-label">Accuracy</span></div>
+        <div class="stat"><span id="dsum-words" class="stat-value"></span><span class="stat-label">Words right</span></div>
+        <div class="stat"><span id="dsum-sentences" class="stat-value"></span><span class="stat-label">Sentences</span></div>
+      </div>
+
+      <h3>Sentence by sentence</h3>
+      <ol id="dsum-list" class="sentence-results"></ol>
+
+      <div class="button-row">
+        <button id="dsum-again" class="btn btn-primary">Do it again</button>
+        <button id="dsum-other" class="btn">Another text</button>
+      </div>
+      <p><button id="dsum-home" class="btn btn-quiet">&larr; Back to dictation texts</button></p>
+    </section>
+
+    <!-- ================= STATS ================= -->
+
+    <section id="view-stats" class="view" data-tab="stats" hidden>
+      <div class="section-head">
+        <div>
+          <h2>Stats</h2>
+          <p class="muted">Everything is saved on this device, in this browser.</p>
+        </div>
+      </div>
+
+      <div class="stats-bar big">
+        <div class="stat"><span id="st-today" class="stat-value"></span><span class="stat-label">Typing today</span></div>
+        <div class="stat"><span id="st-streak" class="stat-value"></span><span class="stat-label">Day streak</span></div>
+        <div class="stat"><span id="st-best" class="stat-value"></span><span class="stat-label">Best WPM</span></div>
+      </div>
+      <p id="st-best-note" class="muted note"></p>
+
+      <h3>Your 5 weakest letters</h3>
+      <div id="st-weak" class="chips"></div>
+
+      <h3>Progress</h3>
+      <div class="filters">
+        <div id="metric-switch" class="segmented" role="group" aria-label="What to show">
+          <button data-value="time">Typing time</button>
+          <button data-value="wpm">Average WPM</button>
+          <button data-value="accuracy">Accuracy</button>
+        </div>
+        <div id="period-switch" class="segmented" role="group" aria-label="Time period">
+          <button data-value="day">Per day (30 days)</button>
+          <button data-value="week">Per week (12 weeks)</button>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h4 id="chart-title" class="chart-title"></h4>
+        <div class="chart-wrap">
+          <canvas id="stats-chart" role="img" aria-label="Chart of your progress"></canvas>
+        </div>
+        <p id="chart-empty" class="muted" hidden></p>
+        <details class="table-view">
+          <summary>Show the numbers as a table</summary>
+          <div class="table-scroll"><table id="chart-table"></table></div>
+        </details>
+      </div>
+
+      <h3>Dictation</h3>
+      <div class="stats-bar">
+        <div class="stat"><span id="st-dict-count" class="stat-value"></span><span class="stat-label">Dictations</span></div>
+        <div class="stat"><span id="st-dict-avg" class="stat-value"></span><span class="stat-label">Average accuracy</span></div>
+        <div class="stat"><span id="st-dict-best" class="stat-value"></span><span class="stat-label">Best accuracy</span></div>
+      </div>
+      <div class="table-scroll"><table id="dict-table"></table></div>
+
+      <h3>Recent typing runs</h3>
+      <div class="table-scroll"><table id="runs-table"></table></div>
+
+      <h3>Your data</h3>
+      <p class="muted">Export saves everything as a file, a backup you can also use on another device. Import adds the runs in such a file to what is already here; nothing is deleted.</p>
+      <div class="button-row tight">
+        <button id="export-btn" class="btn">Export data</button>
+        <button id="import-btn" class="btn">Import data</button>
+        <input id="import-file" type="file" accept=".json,application/json" hidden>
+      </div>
+      <p id="data-message" class="muted note" role="status"></p>
     </section>
 
   </main>
 
-  <!-- Order matters: texts and storage first, because app.js uses them. -->
+  <!-- Order matters: data files first, then helpers, then the parts that use them,
+       and app.js last (it starts everything). -->
   <script src="texts.js"></script>
+  <script src="words.js"></script>
+  <script src="dictation-texts.js"></script>
   <script src="storage.js"></script>
+  <script src="chart.umd.js"></script>
+  <script src="common.js"></script>
+  <script src="analysis.js"></script>
+  <script src="typing.js"></script>
+  <script src="drill.js"></script>
+  <script src="stats.js"></script>
+  <script src="dictation.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
