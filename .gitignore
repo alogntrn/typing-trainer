@@ -1,0 +1,3 @@
+# Files Git should not keep track of
+.DS_Store
+.claude/

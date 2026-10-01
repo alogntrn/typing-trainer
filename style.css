@@ -1,0 +1,286 @@
+/* style.css
+   1. Colours   2. Basics   3. Buttons   4. Home screen
+   5. Typing screen   6. Summary screen   7. Small screens */
+
+/* ---------- 1. Colours ----------
+   All colours are defined once, here. Dark mode just swaps the values. */
+:root {
+  color-scheme: light dark;
+  --bg: #f6f5f1;
+  --card: #ffffff;
+  --text: #1f2328;
+  --muted: #646b73;
+  --border: #dedbd2;
+  --accent: #2f6df0;
+  --accent-text: #ffffff;
+  --accent-soft: #dce8ff;
+  --correct: #19813a;
+  --wrong: #cc2431;
+  --wrong-bg: #fde2e4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --card: #1e2127;
+    --text: #e8eaed;
+    --muted: #9aa1ab;
+    --border: #2f343c;
+    --accent: #6ea0ff;
+    --accent-text: #0d1117;
+    --accent-soft: #263a5e;
+    --correct: #4ac26b;
+    --wrong: #ff8080;
+    --wrong-bg: #4a2227;
+  }
+}
+
+/* ---------- 2. Basics ---------- */
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  /* keeps things clear of the iPad's rounded corners when installed as an app */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+           env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* The "hidden" attribute must always win, even over display: flex/grid below. */
+[hidden] { display: none !important; }
+
+h1, h2, h3 { margin: 0; line-height: 1.2; }
+h1 { font-size: 1.4rem; }
+h2 { font-size: 1.7rem; }
+h3 { font-size: 1.1rem; margin: 32px 0 12px; }
+p  { margin: 0; }
+
+.muted { color: var(--muted); }
+
+.top-bar, main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.top-bar { padding-top: 22px; padding-bottom: 14px; }
+main { padding-bottom: 48px; }
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 10px 0 20px;
+}
+
+.pill {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---------- 3. Buttons ---------- */
+.btn {
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  min-height: 48px;           /* big enough for a finger */
+  padding: 0 20px;
+  cursor: pointer;
+  touch-action: manipulation; /* stops double-tap zoom on iPad */
+}
+.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn-quiet   { background: transparent; border-color: transparent; color: var(--muted); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+@media (hover: hover) {
+  .btn:not(:disabled):hover { border-color: var(--accent); }
+}
+
+.button-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 32px 0 12px; }
+
+/* ---------- 4. Home screen ---------- */
+.text-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.text-item {
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.text-item:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (hover: hover) {
+  .text-item:hover { border-color: var(--accent); }
+}
+.text-item.done { border-color: var(--correct); }
+
+.item-title { font-size: 1.15rem; font-weight: 700; }
+.item-meta  { color: var(--muted); font-size: 0.95rem; }
+.item-done  { color: var(--correct); font-weight: 600; font-size: 0.95rem; }
+
+/* ---------- 5. Typing screen ---------- */
+.typing-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  margin: 6px 0 16px;
+}
+.typing-title { text-align: center; }
+.typing-title h2 { font-size: 1.3rem; }
+
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stat-value {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums; /* digits all the same width, so nothing jumps */
+}
+.stat-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.text-card {
+  position: relative;     /* the hidden input is placed on top of this box */
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px 28px;
+  font-size: clamp(1.4rem, 1rem + 1.5vw, 2rem);
+}
+
+/* The text window shows 4 lines (4 x 1.8em). app.js scrolls it so that the
+   line you are typing on stays near the top. */
+.text-box {
+  position: relative;
+  height: 7.2em;
+  line-height: 1.8;
+  overflow: hidden;
+  white-space: pre-wrap;  /* keep spaces, and wrap lines only at spaces */
+  user-select: none;
+  -webkit-user-select: none;
+}
+.text-card.unfocused .text-box { opacity: 0.5; }
+
+.char { color: var(--muted); border-radius: 3px; }
+.char.correct { color: var(--correct); }
+.char.wrong { color: var(--wrong); background: var(--wrong-bg); }
+.char.current {
+  background: var(--accent-soft);
+  box-shadow: inset 0 -3px 0 var(--accent);   /* the underline cursor */
+  animation: blink 1.1s ease-in-out infinite;
+}
+/* The cursor is waiting on this letter and you pressed another wrong key: red cursor */
+.char.current.bad-key {
+  background: var(--wrong-bg);
+  box-shadow: inset 0 -3px 0 var(--wrong);
+}
+@keyframes blink { 50% { box-shadow: inset 0 -3px 0 transparent; } }
+@media (prefers-reduced-motion: reduce) {
+  .char.current { animation: none; }
+}
+
+.hidden-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  border: 0;
+  padding: 0;
+  font-size: 16px;   /* 16px or more stops iPad Safari from zooming in on focus */
+  cursor: text;
+}
+
+.progress {
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 16px 0 12px;
+}
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.15s;
+}
+.hint { min-height: 1.5em; text-align: center; font-size: 0.95rem; }
+
+/* ---------- 6. Summary screen ---------- */
+.stats-bar.big .stat { padding: 18px 8px; }
+.stats-bar.big .stat-value { font-size: 2.6rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px 6px 8px;
+  font-weight: 600;
+}
+.chip-letter {
+  font-family: ui-monospace, Menlo, monospace;
+  background: var(--wrong-bg);
+  color: var(--wrong);
+  border-radius: 999px;
+  padding: 0 10px;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* ---------- 7. Small screens ---------- */
+@media (max-width: 560px) {
+  .text-card { padding: 16px 18px; }
+  .typing-head { grid-template-columns: 1fr 1fr; }
+  .typing-title { grid-column: 1 / -1; grid-row: 1; }
+  .section-head { flex-direction: column; align-items: flex-start; }
+}

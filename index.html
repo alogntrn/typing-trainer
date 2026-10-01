@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>Type &amp; Dictate</title>
+
+  <!-- Installing on the iPad/iPhone home screen and the app's look when installed -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Type &amp; Dictate">
+  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="top-bar">
+    <h1>Type &amp; Dictate</h1>
+  </header>
+
+  <main>
+
+    <!-- SCREEN 1: today's texts -->
+    <section id="view-home" class="view">
+      <div class="section-head">
+        <div>
+          <h2>Today's texts</h2>
+          <p id="today-date" class="muted"></p>
+        </div>
+        <p id="today-progress" class="pill"></p>
+      </div>
+
+      <div id="today-list" class="text-list"></div>
+
+      <button id="random-btn" class="btn">Random text</button>
+    </section>
+
+    <!-- SCREEN 2: typing -->
+    <section id="view-typing" class="view" hidden>
+      <div class="typing-head">
+        <button id="back-btn" class="btn btn-quiet">&larr; Back</button>
+        <div class="typing-title">
+          <h2 id="typing-title"></h2>
+          <p id="typing-topic" class="muted"></p>
+        </div>
+        <button id="restart-btn" class="btn btn-quiet">Restart</button>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat"><span id="live-wpm" class="stat-value">0</span><span class="stat-label">WPM</span></div>
+        <div class="stat"><span id="live-accuracy" class="stat-value">100%</span><span class="stat-label">Accuracy</span></div>
+        <div class="stat"><span id="live-mistakes" class="stat-value">0</span><span class="stat-label">Mistakes</span></div>
+        <div class="stat"><span id="live-time" class="stat-value">0:00</span><span class="stat-label">Time</span></div>
+      </div>
+
+      <div id="text-card" class="text-card">
+        <div id="text-box" class="text-box"></div>
+        <!-- The hidden input: it sits invisibly on top of the text and receives your typing.
+             The attributes switch off autocorrect, auto-capital letters and spellcheck. -->
+        <input id="hidden-input" class="hidden-input" type="text"
+               autocomplete="off" autocorrect="off" autocapitalize="none"
+               spellcheck="false" aria-label="Type the text shown above">
+      </div>
+
+      <div class="progress"><div id="progress-fill" class="progress-fill"></div></div>
+      <p id="typing-hint" class="muted hint"></p>
+    </section>
+
+    <!-- SCREEN 3: summary after a run -->
+    <section id="view-summary" class="view" hidden>
+      <div class="section-head">
+        <div>
+          <h2>Well done!</h2>
+          <p id="summary-title" class="muted"></p>
+        </div>
+      </div>
+
+      <div class="stats-bar big">
+        <div class="stat"><span id="sum-wpm" class="stat-value"></span><span class="stat-label">WPM</span></div>
+        <div class="stat"><span id="sum-accuracy" class="stat-value"></span><span class="stat-label">Accuracy</span></div>
+        <div class="stat"><span id="sum-time" class="stat-value"></span><span class="stat-label">Time</span></div>
+        <div class="stat"><span id="sum-mistakes" class="stat-value"></span><span class="stat-label">Mistakes</span></div>
+      </div>
+
+      <h3>Letters you missed most</h3>
+      <div id="summary-letters" class="chips"></div>
+
+      <div class="button-row">
+        <button id="again-btn" class="btn btn-primary">Try again</button>
+        <button id="next-btn" class="btn">Next text</button>
+        <button id="practise-btn" class="btn" disabled title="Coming in step 4">Practise my mistakes</button>
+      </div>
+      <p><button id="home-btn" class="btn btn-quiet">&larr; Back to today's texts</button></p>
+    </section>
+
+  </main>
+
+  <!-- Order matters: texts and storage first, because app.js uses them. -->
+  <script src="texts.js"></script>
+  <script src="storage.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
