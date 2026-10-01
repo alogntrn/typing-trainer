@@ -50,10 +50,6 @@ function weekStart(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate() - daysSinceMonday);
 }
 
-function average(numbers) {
-  return numbers.reduce((sum, n) => sum + n, 0) / numbers.length;
-}
-
 // ===== 2. The numbers =====
 
 function showNumbers(runs) {
@@ -258,6 +254,9 @@ function drawChart() {
     yScale.min = Math.max(0, Math.floor((Math.min(...all) - 5) / 10) * 10);
     delete yScale.grace;
   }
+
+  // the chart uses the same typewriter font as the rest of the page
+  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
 
   chart = new Chart($("stats-chart"), {
     type: isBar ? "bar" : "line",

@@ -102,6 +102,8 @@ function mergeImportedData(imported) {
     // skip anything that is clearly not a run
     if (!run || typeof run.date !== "string" || typeof run.title !== "string") continue;
     if (isNaN(new Date(run.date))) continue;
+    // the stats need these numbers; a run without them would break the charts
+    if (![run.durationSec, run.wpm, run.accuracy].every((n) => typeof n === "number" && isFinite(n))) continue;
     if (haveRuns.has(runKey(run))) continue;
     data.runs.push(run);
     haveRuns.add(runKey(run));
@@ -113,6 +115,7 @@ function mergeImportedData(imported) {
   for (const item of Array.isArray(imported.dictations) ? imported.dictations : []) {
     if (!item || typeof item.date !== "string" || typeof item.title !== "string") continue;
     if (isNaN(new Date(item.date))) continue;
+    if (typeof item.accuracy !== "number" || !isFinite(item.accuracy)) continue;
     if (haveDicts.has(dictKey(item))) continue;
     data.dictations.push(item);
     haveDicts.add(dictKey(item));

@@ -4,12 +4,13 @@ A small website for practising typing and dictation. Plain HTML, CSS and JavaScr
 no frameworks, no build tools. Everything you do is saved in your own browser.
 
 ## What it does
-- **Typing**: five texts a day (chosen by the date), or a random text. Live WPM, accuracy
-  and mistakes. After a text, "Practise my mistakes" builds a 50-word drill from the words
+- **Typing**: 305 texts about economics and business, in three lengths (short, medium,
+  long) with an estimated time based on your own speed. Every day brings 5 short, 3 medium
+  or 2 long texts, chosen by the date, or a random one. Live WPM, accuracy and mistakes. After a text, "Practise my mistakes" builds a 50-word drill from the words
   you got wrong and from words with your weakest letters and letter pairs.
 - **Dictation**: a voice (the browser's built-in speech) reads a text sentence by sentence;
   you type what you hear and your sentence is compared word by word. Three levels.
-- **Look**: light and dark mode. The Theme button switches between Auto (follows your
+- **Look**: "paper and ink", a modern typewriter, with the font Courier Prime. Light and dark mode. The Theme button switches between Auto (follows your
   device), Light and Dark.
 - **Stats**: typing time, average WPM and accuracy per day or week (chart), streak, best WPM,
   weakest letters, dictation results. Export and import your data as a JSON file.
@@ -33,14 +34,15 @@ no frameworks, no build tools. Everything you do is saved in your own browser.
 | `stats.js` | The Stats screen, chart, export and import |
 | `analysis.js` | Works out streaks, best WPM, weakest letters from your runs |
 | `storage.js` | Saving and loading your data in the browser |
-| `texts.js` | The typing texts. Add your own here! |
+| `texts.js`, `texts-medium.js`, `texts-long.js` | The typing texts (short, medium, long). Add your own here! |
 | `words.js` | About 1000 common words used for the drills |
 | `dictation-texts.js` | The dictation texts (easy, medium, hard). Add your own here! |
+| `fonts/fonts.css` | The typewriter font Courier Prime, built in (SIL Open Font Licence, see `fonts/OFL.txt`) |
 | `chart.umd.js` | Chart.js 4.5.1, saved locally so it works offline (MIT licence, chartjs.org) |
 | `manifest.webmanifest`, `sw.js`, `icons/` | Make the site installable and usable offline |
 | `.nojekyll` | Tells GitHub Pages to publish the files as they are |
 
 ## Adding your own texts
-Open `texts.js` (typing) or `dictation-texts.js` (dictation), copy one of the blocks, and
+Open one of the `texts` files (typing) or `dictation-texts.js` (dictation), copy one of the blocks, and
 change it. Every title must be unique. If you add a new file to the project, also add it
 to the `FILES` list in `sw.js`, so it works offline.

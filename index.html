@@ -12,8 +12,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Type &amp; Dictate">
-  <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f2eee5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161514" media="(prefers-color-scheme: dark)">
 
   <link rel="icon" type="image/png" href="icons/icon-192.png">
 
@@ -26,12 +26,13 @@
       }
     } catch (error) {}
   </script>
+  <link rel="stylesheet" href="fonts/fonts.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="top-bar">
-    <h1>Type &amp; Dictate</h1>
+    <h1 class="brand">Type &amp; Dictate<span class="brand-cursor" aria-hidden="true">_</span></h1>
     <div class="top-actions">
       <nav class="tabs" aria-label="Main">
         <button id="tab-typing" class="tab" data-tab="typing">Typing</button>
@@ -54,6 +55,16 @@
           <p id="today-date" class="muted"></p>
         </div>
         <p id="today-progress" class="pill"></p>
+      </div>
+
+      <div class="length-block">
+        <p class="label">Exercise length</p>
+        <div id="length-switch" class="segmented length-switch" role="group" aria-label="Exercise length">
+          <button data-value="short"></button>
+          <button data-value="medium"></button>
+          <button data-value="long"></button>
+        </div>
+        <p id="length-note" class="muted note"></p>
       </div>
 
       <div id="today-list" class="text-list"></div>
@@ -284,6 +295,8 @@
   <!-- Order matters: data files first, then helpers, then the parts that use them,
        and app.js last (it starts everything). -->
   <script src="texts.js"></script>
+  <script src="texts-medium.js"></script>
+  <script src="texts-long.js"></script>
   <script src="words.js"></script>
   <script src="dictation-texts.js"></script>
   <script src="storage.js"></script>

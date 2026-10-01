@@ -1,4 +1,5 @@
-// texts.js - the typing texts.
+// texts.js - the short typing texts (up to 120 words). The medium and long ones are
+// in texts-medium.js and texts-long.js. All three files add to the same list, TEXTS.
 //
 // HOW TO ADD YOUR OWN TEXT
 // Copy one block { ... }, paste it before the last line "];" and change it.
@@ -416,7 +417,7 @@ const TEXTS = [
   {
     title: "The Youngest Winner",
     topic: "Famous economists",
-    text: "Kenneth Arrow won the Nobel Prize in Economics in 1972, when he was fifty one years old, which still makes him the youngest person ever to win it. Among other work, he showed that there is no perfect way to turn everyone's preferences into one group decision, a result known as Arrow's impossibility theorem. It helps to explain why voting systems are always imperfect. He lived until 2017, and he stayed active in research for most of his life."
+    text: "Kenneth Arrow won the Nobel Prize in Economics in 1972, when he was fifty one years old, which made him the youngest winner for almost half a century, until Esther Duflo won in 2019 at forty six. Among other work, he showed that there is no perfect way to turn everyone's preferences into one group decision, a result known as Arrow's impossibility theorem. It helps to explain why voting systems are always imperfect. He lived until 2017, and he stayed active in research for most of his life."
   },
   {
     title: "The Euro Arrives",

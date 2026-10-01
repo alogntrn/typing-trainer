@@ -1,15 +1,65 @@
 // typing.js - the typing trainer: daily texts, the typing engine, summary screen.
 //
 // Parts:
-//   1. Choosing the texts (daily set, random text, next text)
+//   1. Choosing the texts (lengths, estimated time, daily set, random, next)
 //   2. The screens (home, summary)
 //   3. The typing engine (what happens when you press a key)
 //   4. Connecting the buttons
 
-const TEXTS_PER_DAY = 5;
 const PAUSE_LIMIT_MS = 5000; // a pause longer than 5 seconds does not count as typing time
 
 // ===== 1. Choosing the texts =====
+
+// The three exercise lengths. Every text belongs to one of them, worked out from its
+// number of words, so a text you add yourself lands in the right group automatically.
+// perDay = how many texts of that length you get each day.
+const LENGTHS = {
+  short:  { name: "Short",  maxWords: 120,      perDay: 5 },
+  medium: { name: "Medium", maxWords: 220,      perDay: 3 },
+  long:   { name: "Long",   maxWords: Infinity, perDay: 2 }
+};
+
+function lengthOf(text) {
+  const words = countWords(text.text);
+  if (words <= LENGTHS.short.maxWords) return "short";
+  if (words <= LENGTHS.medium.maxWords) return "medium";
+  return "long";
+}
+
+// The texts sorted into their groups once, when the page loads:
+// { short: [...], medium: [...], long: [...] }, each in the order of the text files.
+const TEXT_GROUPS = { short: [], medium: [], long: [] };
+for (const text of TEXTS) TEXT_GROUPS[lengthOf(text)].push(text);
+
+// The length you chose on the home screen (remembered between visits).
+function chosenLength() {
+  const length = getSetting("textLength", "short");
+  return TEXT_GROUPS[length] && TEXT_GROUPS[length].length > 0 ? length : "short";
+}
+
+// ----- Estimated duration -----
+
+const DEFAULT_WPM = 30; // used until you have finished a few texts
+
+// Your usual speed: the median WPM of your last 10 runs (the median, so that one
+// unusual run, for example with pasted text, does not change the estimate much).
+function typicalWpm() {
+  const recent = loadData().runs.filter((run) => run.wpm > 0).slice(-10);
+  return recent.length >= 3 ? Math.round(median(recent.map((run) => run.wpm))) : DEFAULT_WPM;
+}
+
+// Minutes a text should take you. WPM counts 5 characters (spaces included) as one
+// "word", so the estimate uses the number of characters, not words.
+function estimatedMinutes(text, wpm) {
+  return text.text.length / 5 / wpm;
+}
+
+// 0.6 -> "~1 min", 7.4 -> "~7 min"
+function formatMinutes(minutes) {
+  return "~" + Math.max(1, Math.round(minutes)) + " min";
+}
+
+// ----- The daily set -----
 
 // The number of whole days since 1 January 1970, by your local calendar.
 // It goes up by exactly 1 at midnight, so it is a handy "date as a number".
@@ -17,24 +67,27 @@ function dayNumber(date) {
   return Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000);
 }
 
-// Today's 5 texts: 5 neighbours from the list, and every new day the window
-// slides on by 5. With 150 texts nothing repeats for 30 days; with the 20
-// texts we have for now, the set repeats every 4 days.
+// Today's texts for the chosen length: neighbours from that group's list, and every
+// new day the window slides on. With enough texts nothing repeats for a month
+// (150 short texts at 5 a day, 90 medium at 3, 60 long at 2).
 function getTodaysTexts() {
-  const start = (dayNumber(new Date()) * TEXTS_PER_DAY) % TEXTS.length;
+  const group = TEXT_GROUPS[chosenLength()];
+  const perDay = Math.min(LENGTHS[chosenLength()].perDay, group.length);
+  const start = (dayNumber(new Date()) * perDay) % group.length;
   const todays = [];
-  for (let i = 0; i < TEXTS_PER_DAY; i++) {
-    todays.push(TEXTS[(start + i) % TEXTS.length]);
+  for (let i = 0; i < perDay; i++) {
+    todays.push(group[(start + i) % group.length]);
   }
   return todays;
 }
 
-// Any text from the whole collection (but not the one we are excluding).
+// Any text of the chosen length (but not the one we are excluding).
 function getRandomText(excludeTitle) {
+  const group = TEXT_GROUPS[chosenLength()];
   let pick;
   do {
-    pick = TEXTS[Math.floor(Math.random() * TEXTS.length)];
-  } while (pick.title === excludeTitle && TEXTS.length > 1);
+    pick = group[Math.floor(Math.random() * group.length)];
+  } while (pick.title === excludeTitle && group.length > 1);
   return pick;
 }
 
@@ -62,11 +115,26 @@ function showHome() {
   const done = titlesDoneToday();
   const todays = getTodaysTexts();
   const doneCount = todays.filter((text) => done.includes(text.title)).length;
+  const wpm = typicalWpm();
 
   $("today-date").textContent = new Date().toLocaleDateString("en-GB", {
     weekday: "long", day: "numeric", month: "long", year: "numeric"
   });
-  $("today-progress").textContent = doneCount + " of " + todays.length + " done today";
+  $("today-progress").textContent = doneCount + " of " + todays.length + " done";
+
+  // the length switch, with an estimated time for a typical text of each length
+  for (const button of $("length-switch").querySelectorAll("button")) {
+    const group = TEXT_GROUPS[button.dataset.value];
+    button.innerHTML = "";
+    button.appendChild(el("span", "seg-name", LENGTHS[button.dataset.value].name));
+    button.disabled = group.length === 0;   // no texts of this length (yet)
+    const minutes = group.length > 0 ? average(group.map((text) => estimatedMinutes(text, wpm))) : 0;
+    button.appendChild(el("span", "seg-sub", group.length > 0 ? formatMinutes(minutes) : "no texts"));
+  }
+  markSwitch("length-switch", chosenLength());
+  $("length-note").textContent = loadData().runs.filter((run) => run.wpm > 0).length >= 3
+    ? "Times are estimates, based on your usual speed of " + wpm + " WPM (last 10 runs)."
+    : "Times are estimates, based on " + wpm + " WPM until you have finished a few texts.";
 
   const list = $("today-list");
   list.innerHTML = "";
@@ -74,8 +142,9 @@ function showHome() {
     const isDone = done.includes(text.title);
     const card = el("button", isDone ? "text-item done" : "text-item");
     card.appendChild(el("span", "item-title", text.title));
-    card.appendChild(el("span", "item-meta", text.topic + " - " + countWords(text.text) + " words"));
-    if (isDone) card.appendChild(el("span", "item-done", "✓ Done today"));
+    card.appendChild(el("span", "item-meta",
+      text.topic + " \u00b7 " + countWords(text.text) + " words \u00b7 " + formatMinutes(estimatedMinutes(text, wpm))));
+    if (isDone) card.appendChild(el("span", "item-done", "\u2713 Done today"));
     card.addEventListener("click", () => startText(text));
     list.appendChild(card);
   }
@@ -130,7 +199,7 @@ const hiddenInput = $("hidden-input"); // the invisible text field that receives
 function startText(textObj) {
   currentText = textObj;
   run = {
-    text: textObj.text,
+    text: cleanText(textObj.text),
     pos: 0,            // which character you are on (0 = the first)
     correct: 0,        // how many letters you typed right
     stuck: false,      // true right after a skipped letter: the cursor must NOT move on until you type this letter right
@@ -180,6 +249,13 @@ function buildTextDisplay() {
   });
   charEls[0].classList.add("current");
   $("progress-fill").style.width = "0%";
+}
+
+// Make a text safe to type: curly quotes become straight ones, and line breaks or
+// double spaces become one space. (Handy when you paste your own texts into texts.js:
+// a line break or a curly quote could otherwise never be typed.)
+function cleanText(text) {
+  return text.split("").map(normaliseChar).join("").replace(/\s+/g, " ").trim();
 }
 
 // Some keyboards swap straight quotes and hyphens for "smart" ones. Swap them back.
@@ -350,6 +426,14 @@ hiddenInput.addEventListener("beforeinput", (event) => {
 hiddenInput.addEventListener("focus", updateHint);
 hiddenInput.addEventListener("blur", updateHint);
 setInterval(updateHint, 500); // notices when you have paused for more than 5 seconds
+
+// Changing the exercise length shows today's texts for that length.
+$("length-switch").addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  setSetting("textLength", button.dataset.value);
+  showHome();
+});
 
 $("random-btn").addEventListener("click", () => startText(getRandomText()));
 $("back-btn").addEventListener("click", showHome);

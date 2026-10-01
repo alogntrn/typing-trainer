@@ -38,6 +38,19 @@ function formatCompact(seconds) {
   return Math.floor(minutes / 60) + "h " + String(minutes % 60).padStart(2, "0") + "m";
 }
 
+// The average of a list of numbers.
+function average(numbers) {
+  return numbers.reduce((sum, n) => sum + n, 0) / numbers.length;
+}
+
+// The middle value of a list of numbers (half are bigger, half are smaller).
+// Unlike the average, one strange value cannot pull it far away.
+function median(numbers) {
+  const sorted = numbers.slice().sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 1 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
 // A list in random order (a new list; the original stays as it was).
 function shuffle(list) {
   const mixed = list.slice();
@@ -58,7 +71,10 @@ function showView(name) {
     if (!view.hidden) tabName = view.dataset.tab;
   }
   for (const tab of document.querySelectorAll(".tab")) {
-    tab.classList.toggle("active", tab.dataset.tab === tabName);
+    const isActive = tab.dataset.tab === tabName;
+    tab.classList.toggle("active", isActive);
+    if (isActive) tab.setAttribute("aria-current", "page");   // screen readers say "current page"
+    else tab.removeAttribute("aria-current");
   }
   if ("speechSynthesis" in window) speechSynthesis.cancel();
   window.scrollTo(0, 0);
