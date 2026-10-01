@@ -3,7 +3,11 @@
    5. Typing screen   6. Summary screen   7. Small screens */
 
 /* ---------- 1. Colours ----------
-   All colours are defined once, here. Dark mode just swaps the values. */
+   All colours are defined once, here. Dark mode just swaps the values.
+   Three situations: light (the default), dark because your device is set to dark
+   ("Auto"), and dark/light because you picked it with the Theme button
+   (that sets data-theme="dark" or data-theme="light" on the page).
+   The dark values appear twice below. Keep both blocks identical when you edit. */
 :root {
   color-scheme: light dark;
   --bg: #f6f5f1;
@@ -23,9 +27,11 @@
   --gridline: #e1e0d9;
   --axis: #c3c2b7;
 }
+:root[data-theme="light"] { color-scheme: light; }
 
+/* dark because the device says so (unless you chose light) */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #14161a;
     --card: #1e2127;
     --text: #e8eaed;
@@ -42,6 +48,26 @@
     --gridline: #2c2c2a;
     --axis: #383835;
   }
+}
+
+/* dark because you chose it */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #14161a;
+  --card: #1e2127;
+  --text: #e8eaed;
+  --muted: #9aa1ab;
+  --border: #2f343c;
+  --accent: #6ea0ff;
+  --accent-text: #0d1117;
+  --accent-soft: #263a5e;
+  --correct: #4ac26b;
+  --wrong: #ff8080;
+  --wrong-bg: #4a2227;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --gridline: #2c2c2a;
+  --axis: #383835;
 }
 
 /* ---------- 2. Basics ---------- */
@@ -295,6 +321,9 @@ main { padding-bottom: 48px; }
   gap: 12px;
 }
 
+.top-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.theme-btn { min-height: 44px; padding: 0 14px; font-size: 0.95rem; }
+
 .tabs { display: flex; gap: 6px; }
 .tab {
   font: inherit;
@@ -455,6 +484,11 @@ caption { text-align: left; padding: 8px 0; }
   .typing-title { grid-column: 1 / -1; grid-row: 1; }
   .section-head { flex-direction: column; align-items: flex-start; }
   .tab { padding: 0 12px; }
+  /* header on a phone: the title and the Theme button share the first row, the tabs get the second */
+  .top-actions { display: contents; }
+  .top-bar h1 { order: 1; }
+  .theme-btn { order: 2; margin-left: auto; }
+  .tabs { order: 3; width: 100%; }
   .chart-card { padding: 14px; }
   .chart-wrap { height: 260px; }
   .word-line, .dict-input { font-size: 1.15rem; }

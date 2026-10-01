@@ -15,6 +15,34 @@ $("tab-typing").addEventListener("click", showHome);
 $("tab-dictation").addEventListener("click", showDictationHome);
 $("tab-stats").addEventListener("click", showStats);
 
+// The colour theme button: Auto (follows your device) -> Light -> Dark -> Auto ...
+// The choice is saved on this device only (not in your exported data), because
+// your Mac and your iPad may well want different looks.
+const THEMES = ["auto", "light", "dark"];
+
+function currentTheme() {
+  const saved = document.documentElement.getAttribute("data-theme");
+  return saved === "light" || saved === "dark" ? saved : "auto";
+}
+
+function showThemeLabel() {
+  const name = currentTheme();
+  $("theme-btn").textContent = "Theme: " + name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+$("theme-btn").addEventListener("click", () => {
+  const next = THEMES[(THEMES.indexOf(currentTheme()) + 1) % THEMES.length];
+  try {
+    if (next === "auto") localStorage.removeItem("typeAndDictateTheme");
+    else localStorage.setItem("typeAndDictateTheme", next);
+  } catch (error) {}
+  if (next === "auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", next);
+  showThemeLabel();
+  if (!$("view-stats").hidden) drawChart();   // the chart's colours come from the theme
+});
+showThemeLabel();
+
 // First screen.
 showHome();
 

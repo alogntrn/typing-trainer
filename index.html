@@ -15,17 +15,31 @@
   <meta name="theme-color" content="#f6f5f1" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
 
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+
+  <script>
+    // Apply your saved colour theme right away, before the page is drawn (no flash).
+    try {
+      var savedTheme = localStorage.getItem("typeAndDictateTheme");
+      if (savedTheme === "light" || savedTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      }
+    } catch (error) {}
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header class="top-bar">
     <h1>Type &amp; Dictate</h1>
-    <nav class="tabs" aria-label="Main">
-      <button id="tab-typing" class="tab" data-tab="typing">Typing</button>
-      <button id="tab-dictation" class="tab" data-tab="dictation">Dictation</button>
-      <button id="tab-stats" class="tab" data-tab="stats">Stats</button>
-    </nav>
+    <div class="top-actions">
+      <nav class="tabs" aria-label="Main">
+        <button id="tab-typing" class="tab" data-tab="typing">Typing</button>
+        <button id="tab-dictation" class="tab" data-tab="dictation">Dictation</button>
+        <button id="tab-stats" class="tab" data-tab="stats">Stats</button>
+      </nav>
+      <button id="theme-btn" class="btn btn-quiet theme-btn" aria-label="Colour theme"></button>
+    </div>
   </header>
 
   <main>

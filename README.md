@@ -9,6 +9,8 @@ no frameworks, no build tools. Everything you do is saved in your own browser.
   you got wrong and from words with your weakest letters and letter pairs.
 - **Dictation**: a voice (the browser's built-in speech) reads a text sentence by sentence;
   you type what you hear and your sentence is compared word by word. Three levels.
+- **Look**: light and dark mode. The Theme button switches between Auto (follows your
+  device), Light and Dark.
 - **Stats**: typing time, average WPM and accuracy per day or week (chart), streak, best WPM,
   weakest letters, dictation results. Export and import your data as a JSON file.
 
