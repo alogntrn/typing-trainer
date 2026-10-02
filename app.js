@@ -10,6 +10,11 @@
 //   storage.js    saving and loading
 //   texts.js, words.js, dictation-texts.js    the texts and words themselves
 
+// The version of the app. Change it whenever you publish an update: it is shown at the
+// bottom of the Stats screen, so you can check that your browser has the newest version.
+const APP_VERSION = "2026-10-02";
+$("app-version").textContent = "App version: " + APP_VERSION;
+
 // The three tabs at the top.
 $("tab-typing").addEventListener("click", showHome);
 $("tab-dictation").addEventListener("click", showDictationHome);

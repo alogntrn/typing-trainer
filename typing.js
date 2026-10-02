@@ -229,9 +229,13 @@ function startText(textObj) {
 
 // Put the text on the screen: one <span> per character, grouped into words.
 function buildTextDisplay() {
-  const box = $("text-box");
-  box.innerHTML = "";
-  box.scrollTop = 0; // start at the first line (this only works while the screen is visible)
+  // Swap the text window for a brand-new, empty copy. Browsers remember where a box
+  // was scrolled to, even while its screen is hidden, and some bring that position back
+  // later, so a new text could open at the bottom. A new box has nothing to remember,
+  // so every text starts on its first line.
+  const oldBox = $("text-box");
+  const box = oldBox.cloneNode(false); // same id and look, but no text and no scroll position
+  oldBox.replaceWith(box);
   charEls = [];
   charWords = [];
 
