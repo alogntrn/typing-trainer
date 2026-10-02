@@ -17,6 +17,7 @@ const FILES = [
   "style.css",
   "app.js",
   "common.js",
+  "sound.js",
   "typing.js",
   "drill.js",
   "stats.js",

@@ -224,6 +224,7 @@ function startText(textObj) {
   // tap/click handler, which is what lets the iPad show its on-screen keyboard.
   hiddenInput.value = "";
   hiddenInput.focus();
+  unlockAudio(); // (sound.js) browsers only allow sound after a click or tap, like this one
   updateHint();
 }
 
@@ -416,6 +417,12 @@ hiddenInput.addEventListener("input", () => {
   const typedText = hiddenInput.value;
   hiddenInput.value = "";
   if (!run || run.finished) return;
+  // (sound.js) one typewriter click per key press. If several characters arrive at once,
+  // for example a word from the iPad's suggestions, it is still just one click.
+  if (typedText) {
+    unlockAudio();
+    playKeySound(typedText.slice(-1));
+  }
   for (const ch of typedText.split("")) {
     if (!run.finished) typeCharacter(normaliseChar(ch));
   }

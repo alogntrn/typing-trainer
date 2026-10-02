@@ -10,6 +10,8 @@ no frameworks, no build tools. Everything you do is saved in your own browser.
   you got wrong and from words with your weakest letters and letter pairs.
 - **Dictation**: a voice (the browser's built-in speech) reads a text sentence by sentence;
   you type what you hear and your sentence is compared word by word. Three levels.
+- **Sound**: a typewriter click for every key you type (made by the browser, no sound
+  files). Hover over the speaker button for the volume slider, click it to mute.
 - **Look**: "paper and ink", a modern typewriter, with the font Courier Prime. Light and dark mode. The Theme button switches between Auto (follows your
   device), Light and Dark.
 - **Stats**: typing time, average WPM and accuracy per day or week (chart), streak, best WPM,
@@ -28,6 +30,7 @@ no frameworks, no build tools. Everything you do is saved in your own browser.
 | `style.css` | How it looks (light and dark mode) |
 | `app.js` | Starts everything (tabs, first screen, offline support) |
 | `common.js` | Small helpers used everywhere |
+| `sound.js` | The typewriter sound for each key, and the volume button |
 | `typing.js` | The typing trainer |
 | `drill.js` | "Practise my mistakes" |
 | `dictation.js` | The dictation trainer |

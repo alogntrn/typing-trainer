@@ -542,3 +542,61 @@ caption { text-align: left; padding: 8px 0; }
   .progress-fill { transition: none; }
   .btn:not(:disabled):active { transform: none; }
 }
+
+/* ---------- 12. Typing sound control ----------
+   A speaker button in the header. With a mouse, hovering shows the volume slider below it;
+   on a touch screen, sound.js adds the class "open" when you tap the speaker. */
+.volume { position: relative; }
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+}
+.speaker-icon { width: 22px; height: 22px; display: block; }
+/* which parts of the icon to show: crossed out when off, 1 or 2 sound waves when on */
+.volume[data-level="0"] .wave { display: none; }
+.volume[data-level="1"] .wave-2 { display: none; }
+.volume:not([data-level="0"]) .mute-x { display: none; }
+
+.volume-panel {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 20;
+  padding-top: 6px;   /* an invisible bridge, so the mouse can move from the button to the slider */
+}
+.volume:hover .volume-panel,
+.volume.open .volume-panel,
+.volume:has(:focus-visible) .volume-panel,   /* reached with the Tab key */
+.volume:has(input:active) .volume-panel {    /* keep it open while dragging the slider */
+  display: block;
+}
+.volume-card {
+  width: 230px;
+  background: var(--card);
+  border: 1.5px solid var(--text);
+  border-radius: 4px;
+  padding: 12px 14px 8px;
+  box-shadow: 0 18px 30px -24px var(--shadow);
+}
+.volume-card label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.volume-card input[type="range"] { width: 100%; min-height: 36px; accent-color: var(--text); }
+
+@media (max-width: 560px) {
+  /* phone header: brand, speaker and Theme on the first row, the tabs below */
+  .volume { order: 2; margin-left: auto; }
+  .theme-btn { order: 3; margin-left: 0; }
+  .tabs { order: 4; }
+}

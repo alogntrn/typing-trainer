@@ -12,7 +12,7 @@
 
 // The version of the app. Change it whenever you publish an update: it is shown at the
 // bottom of the Stats screen, so you can check that your browser has the newest version.
-const APP_VERSION = "2026-10-02";
+const APP_VERSION = "2026-10-02b";
 $("app-version").textContent = "App version: " + APP_VERSION;
 
 // The three tabs at the top.

@@ -39,6 +39,24 @@
         <button id="tab-dictation" class="tab" data-tab="dictation">Dictation</button>
         <button id="tab-stats" class="tab" data-tab="stats">Stats</button>
       </nav>
+      <!-- Typing sound: hover over the speaker (or tap it) to show the volume slider -->
+      <div id="volume" class="volume" data-level="2">
+        <button id="volume-btn" class="btn btn-quiet icon-btn" aria-label="Typing sound">
+          <svg class="speaker-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4H4z" fill="currentColor"/>
+            <path class="wave wave-1" d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/>
+            <path class="wave wave-2" d="M18 7a7 7 0 0 1 0 10"/>
+            <path class="mute-x" d="M16 9.5l5 5m0-5l-5 5"/>
+          </svg>
+        </button>
+        <div class="volume-panel">
+          <div class="volume-card">
+            <label for="volume-range"><span>Typing sound</span><span id="volume-value"></span></label>
+            <input id="volume-range" type="range" min="0" max="100" step="5">
+          </div>
+        </div>
+      </div>
       <button id="theme-btn" class="btn btn-quiet theme-btn" aria-label="Colour theme"></button>
     </div>
   </header>
@@ -303,6 +321,7 @@
   <script src="storage.js"></script>
   <script src="chart.umd.js"></script>
   <script src="common.js"></script>
+  <script src="sound.js"></script>
   <script src="analysis.js"></script>
   <script src="typing.js"></script>
   <script src="drill.js"></script>
